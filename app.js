@@ -267,7 +267,7 @@
   function renderChart(){
     const rows=lastCalc.sim.rows.slice(0,18); if(!rows.length) return;
     const w=760,h=250,pad={l:55,r:18,t:18,b:36};
-    const vals=rows.flatMap(r=>[r.end,r.beginning]); vals.push(lastCalc.fund.total);
+    const vals=rows.flatMap(r=>[r.end,r.beginning]); vals.push(lastCalc.fund.total, lastCalc.fund.emergency);
     const min=Math.min(0,...vals), max=Math.max(...vals,1); const span=max-min||1;
     const x=i=>pad.l+(w-pad.l-pad.r)*(i/Math.max(rows.length-1,1));
     const y=v=>pad.t+(h-pad.t-pad.b)*(1-(v-min)/span);
@@ -277,7 +277,8 @@
     for(let i=0;i<=yTicks;i++){const v=min+span*(i/yTicks); const yy=y(v); grid+=`<line x1="${pad.l}" y1="${yy}" x2="${w-pad.r}" y2="${yy}" stroke="#eef0f3"/><text x="${pad.l-8}" y="${yy+3}" text-anchor="end" class="chart-axis">${compactMoney(v)}</text>`;}
     const labels=rows.map((r,i)=>i%3===0?`<text x="${x(i)}" y="${h-10}" text-anchor="middle" class="chart-axis">${monthLabel(r.date).replace(" "," ’")}</text>`:"").join("");
     const targetIndex=rows.findIndex(r=>sameMonth(r.date,lastCalc.sim.moveDate)); const tx=targetIndex>=0?x(targetIndex):null;
-    $("savingsChart").innerHTML=`<svg viewBox="0 0 ${w} ${h}" aria-hidden="true"><defs><linearGradient id="areaFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#35a675" stop-opacity=".24"/><stop offset="100%" stop-color="#35a675" stop-opacity=".02"/></linearGradient></defs>${grid}<line x1="${pad.l}" y1="${y(lastCalc.fund.total)}" x2="${w-pad.r}" y2="${y(lastCalc.fund.total)}" class="chart-goal"/><text x="${w-pad.r}" y="${y(lastCalc.fund.total)-6}" text-anchor="end" class="chart-label">Cash goal ${compactMoney(lastCalc.fund.total)}</text>${tx!==null?`<line x1="${tx}" y1="${pad.t}" x2="${tx}" y2="${h-pad.b}" class="chart-target"/><text x="${tx+5}" y="${pad.t+11}" class="chart-axis">Target move</text>`:""}<polygon points="${area}" class="chart-area"/><polyline points="${pts}" class="chart-line"/>${rows.map((r,i)=>i===0||i===rows.length-1||sameMonth(r.date,lastCalc.sim.moveDate)?`<circle cx="${x(i)}" cy="${y(r.end)}" r="4" class="chart-dot"/>`:"").join("")}${labels}</svg>`;
+    const emergencyY=y(lastCalc.fund.emergency);
+    $("savingsChart").innerHTML=`<svg viewBox="0 0 ${w} ${h}" aria-hidden="true"><defs><linearGradient id="areaFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#35a675" stop-opacity=".24"/><stop offset="100%" stop-color="#35a675" stop-opacity=".02"/></linearGradient></defs>${grid}<line x1="${pad.l}" y1="${y(lastCalc.fund.total)}" x2="${w-pad.r}" y2="${y(lastCalc.fund.total)}" class="chart-goal"/><text x="${w-pad.r}" y="${y(lastCalc.fund.total)-6}" text-anchor="end" class="chart-label">Cash goal ${compactMoney(lastCalc.fund.total)}</text><line x1="${pad.l}" y1="${emergencyY}" x2="${w-pad.r}" y2="${emergencyY}" class="chart-emergency"/><text x="${w-pad.r}" y="${emergencyY-6}" text-anchor="end" class="chart-emergency-label">Minimum emergency fund ${compactMoney(lastCalc.fund.emergency)}</text>${tx!==null?`<line x1="${tx}" y1="${pad.t}" x2="${tx}" y2="${h-pad.b}" class="chart-target"/><text x="${tx+5}" y="${pad.t+11}" class="chart-axis">Target move</text>`:""}<polygon points="${area}" class="chart-area"/><polyline points="${pts}" class="chart-line"/>${rows.map((r,i)=>i===0||i===rows.length-1||sameMonth(r.date,lastCalc.sim.moveDate)?`<circle cx="${x(i)}" cy="${y(r.end)}" r="4" class="chart-dot"/>`:"").join("")}${labels}</svg>`;
   }
 
   function renderDonut(){

@@ -10,7 +10,7 @@ A no-build, mobile-first move-out cash-flow planner based on the supplied Excel 
 - Calculates deposit, first month's rent, utility deposit, moving/setup costs, and an emergency fund.
 - Shows the target-date cash surplus/shortfall, post-move monthly leftover, and earliest cash-ready month.
 - Turns optional spending into weekly and annual dollars and shows what cutting fun money in half does to the move-out timeline.
-- Shows a savings-road chart, paycheck split, fund breakdown, and detailed monthly forecast.
+- Shows a savings-road chart with dashed guides for the full cash goal and minimum emergency fund, plus paycheck split, fund breakdown, and detailed monthly forecast.
 - Saves up to 30 scenarios in browser storage, with load and delete controls.
 - Creates shareable URLs containing a copy of the scenario. On iPhone it uses the native Share sheet when available.
 - Can be installed to the iPhone Home Screen as a lightweight web app.
