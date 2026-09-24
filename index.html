@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#f6f7f4" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Move Out Meter" />
+  <title>Move Out Meter</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">↗</div>
+      <div>
+        <h1>Move Out Meter</h1>
+        <p>Get your own place without going broke.</p>
+      </div>
+    </div>
+    <button id="savedBtn" class="top-action" type="button" aria-label="Saved plans">Plans</button>
+  </header>
+
+  <main class="shell">
+    <div id="sharedBanner" class="banner hidden">
+      <strong>Someone shared this plan with you.</strong> Change anything you want. Your changes stay on this phone unless you save or share them.
+    </div>
+
+    <section class="hero card" aria-labelledby="statusTitle">
+      <div class="hero-head">
+        <div>
+          <p class="kicker light">MOVE-OUT CHECK</p>
+          <div id="statusBadge" class="status-badge">CHECKING</div>
+        </div>
+        <div class="target-chip">
+          <span>Target</span>
+          <strong id="heroTargetDate">—</strong>
+        </div>
+      </div>
+
+      <h2 id="statusTitle">Checking your numbers…</h2>
+      <p id="statusSubtitle" class="hero-sub"></p>
+
+      <div class="money-progress">
+        <div class="progress-copy">
+          <div>
+            <span>Cash you'll have</span>
+            <strong id="fundsAtTarget">$0</strong>
+          </div>
+          <div class="goal-copy">
+            <span>Cash you need</span>
+            <strong id="moveOutGoal">$0</strong>
+          </div>
+        </div>
+        <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
+        <div class="progress-labels">
+          <span id="progressText">$0 ready</span>
+          <span id="goalText">$0 goal</span>
+        </div>
+      </div>
+
+      <div id="actionMessage" class="action-message"></div>
+
+      <div class="hero-facts">
+        <div class="hero-fact">
+          <span>Cash-ready date</span>
+          <strong id="earliestDate">—</strong>
+        </div>
+        <div class="hero-fact">
+          <span>Breathing room after move</span>
+          <strong id="postMoveLeftover">$0/mo</strong>
+        </div>
+      </div>
+
+      <div class="button-row">
+        <button id="runBtn" class="btn primary" type="button">Check my plan</button>
+        <button id="saveBtn" class="btn glass" type="button" aria-label="Save plan">Save</button>
+        <button id="shareBtn" class="btn glass" type="button" aria-label="Share plan">Share</button>
+      </div>
+      <p id="reportingNotice" class="privacy-note hidden"></p>
+    </section>
+
+    <section class="money-snapshot" aria-label="Money snapshot">
+      <div class="snapshot-head">
+        <div>
+          <p class="kicker">THIS MONTH</p>
+          <h2>Where your paycheck goes</h2>
+        </div>
+        <span id="saveRateChip" class="score-chip">—</span>
+      </div>
+      <div class="snapshot-grid">
+        <article class="snapshot-card income-card">
+          <span>Take-home</span>
+          <strong id="monthlyIncome">$0</strong>
+        </article>
+        <article class="snapshot-card">
+          <span>Bills & basics</span>
+          <strong id="currentNeedSpend">$0</strong>
+        </article>
+        <article class="snapshot-card fun-card">
+          <span>Fun money</span>
+          <strong id="wantSpend">$0/mo</strong>
+        </article>
+        <article class="snapshot-card save-card">
+          <span>Going toward freedom</span>
+          <strong id="preMoveSavings">$0/mo</strong>
+        </article>
+      </div>
+    </section>
+
+    <section class="card reality-card">
+      <div class="section-heading stacked-mobile">
+        <div>
+          <p class="kicker">THE MONEY LEAK</p>
+          <h2>What is slowing you down?</h2>
+        </div>
+        <p class="section-note">Not a guilt trip. Just the tradeoff in plain English.</p>
+      </div>
+      <div class="leak-summary">
+        <div>
+          <span>You spend on wants</span>
+          <strong id="yearlyWants">$0/year</strong>
+        </div>
+        <div>
+          <span>That's about</span>
+          <strong id="weeklyWants">$0/week</strong>
+        </div>
+      </div>
+      <div id="leakCards" class="leak-grid"></div>
+      <div id="cutHalfCard" class="callout"></div>
+    </section>
+
+    <section class="card chart-card">
+      <div class="section-heading stacked-mobile">
+        <div>
+          <p class="kicker">YOUR ROAD TO THE KEYS</p>
+          <h2>Watch your cash climb.</h2>
+        </div>
+        <p class="section-note">The gold line is the cash goal.</p>
+      </div>
+      <div id="savingsChart" class="chart-wrap" role="img" aria-label="Savings forecast chart"></div>
+    </section>
+
+    <section class="card setup-card">
+      <div class="setup-number">1</div>
+      <div class="section-heading">
+        <div>
+          <p class="kicker">PAYCHECK + SAVINGS</p>
+          <h2>What money do you have?</h2>
+        </div>
+      </div>
+      <div class="form-grid two">
+        <label>Take-home paycheck
+          <div class="money-input"><span>$</span><input id="paycheck" inputmode="decimal" type="number" min="0" step="0.01" /></div>
+        </label>
+        <label>Paychecks each year
+          <input id="paychecksPerYear" inputmode="numeric" type="number" min="1" max="365" step="1" />
+          <small>26 = paid every other week</small>
+        </label>
+        <label>Extra money each month
+          <div class="money-input"><span>$</span><input id="extraIncome" inputmode="decimal" type="number" min="0" step="0.01" /></div>
+        </label>
+        <label>Cash saved right now
+          <div class="money-input"><span>$</span><input id="currentSavings" inputmode="decimal" type="number" min="0" step="0.01" /></div>
+        </label>
+      </div>
+      <div class="form-grid two date-grid">
+        <label>Start counting from
+          <input id="modelStartDate" type="date" />
+        </label>
+        <label>When do you want to move?
+          <input id="targetMoveDate" type="date" />
+        </label>
+      </div>
+    </section>
+
+    <section class="card setup-card">
+      <div class="setup-number">2</div>
+      <div class="section-heading stacked-mobile">
+        <div>
+          <p class="kicker">MONTHLY SPENDING</p>
+          <h2>What comes out every month?</h2>
+        </div>
+        <p class="section-note">Bills are things you need. Fun money is stuff you can turn down if you want the keys sooner.</p>
+      </div>
+      <div class="spend-summary">
+        <div><span>Bills & basics after moving</span><strong id="needTotal">$0/mo</strong></div>
+        <div><span>Fun money</span><strong id="wantsTotal">$0/mo</strong></div>
+      </div>
+      <div id="expenseList" class="expense-list"></div>
+      <button id="addExpenseBtn" type="button" class="add-btn">+ Add another monthly expense</button>
+    </section>
+
+    <section class="card setup-card">
+      <div class="setup-number">3</div>
+      <div class="section-heading stacked-mobile">
+        <div>
+          <p class="kicker">MOVE-IN CASH</p>
+          <h2>How much cash before you sign?</h2>
+        </div>
+        <p class="section-note">Getting the keys costs more than first month's rent.</p>
+      </div>
+      <div class="form-grid two">
+        <label>Deposit / down payment
+          <div class="money-input"><span>$</span><input id="deposit" inputmode="decimal" type="number" min="0" step="0.01" /></div>
+        </label>
+        <label>First month's rent
+          <div class="money-input"><span>$</span><input id="firstMonthRent" inputmode="decimal" type="number" min="0" step="0.01" /></div>
+        </label>
+        <label>Utility deposits
+          <div class="money-input"><span>$</span><input id="utilityDeposit" inputmode="decimal" type="number" min="0" step="0.01" /></div>
+        </label>
+        <label>Moving + setup stuff
+          <div class="money-input"><span>$</span><input id="movingCosts" inputmode="decimal" type="number" min="0" step="0.01" /></div>
+        </label>
+        <label>Emergency cushion
+          <div class="suffix-input"><input id="emergencyMonths" inputmode="decimal" type="number" min="0" step="0.5" /><span>months</span></div>
+        </label>
+      </div>
+      <div id="fundBreakdown" class="fund-breakdown"></div>
+    </section>
+
+    <section class="card split-card">
+      <div class="section-heading stacked-mobile">
+        <div>
+          <p class="kicker">RIGHT NOW</p>
+          <h2>Every dollar has a job.</h2>
+        </div>
+      </div>
+      <div class="split-layout">
+        <div id="spendDonut" class="donut"><div><strong id="donutSave">$0</strong><span>left</span></div></div>
+        <div id="splitLegend" class="legend"></div>
+      </div>
+    </section>
+
+    <section class="card forecast-card">
+      <details>
+        <summary>
+          <span><span class="kicker">IF YOU WANT THE RECEIPTS</span><strong>See the month-by-month math</strong></span>
+          <span>Open</span>
+        </summary>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Month</th><th>Start</th><th>Income</th><th>Bills</th><th>Fun</th><th>Move costs</th><th>Net</th><th>End</th></tr></thead>
+            <tbody id="forecastBody"></tbody>
+          </table>
+        </div>
+      </details>
+    </section>
+
+    <section class="plain-note">
+      <strong>One rule:</strong> don't plan to hit $0 after you move. Cars break. Tires die. Life sends invoices.
+      <span>Saved plans stay on this device. Shared links carry a copy of the plan.</span>
+    </section>
+  </main>
+
+  <dialog id="savedDialog" class="dialog">
+    <form method="dialog" class="dialog-shell">
+      <div class="dialog-head"><div><p class="kicker">SAVED ON THIS PHONE</p><h2>Your plans</h2></div><button class="dialog-close" value="cancel" aria-label="Close">×</button></div>
+      <div id="savedList" class="saved-list"></div>
+    </form>
+  </dialog>
+
+  <dialog id="expenseDialog" class="dialog">
+    <form id="expenseForm" method="dialog" class="dialog-shell">
+      <div class="dialog-head"><div><p class="kicker">NEW MONTHLY EXPENSE</p><h2>Add a bill</h2></div><button class="dialog-close" value="cancel" aria-label="Close">×</button></div>
+      <label>Name<input id="newExpenseName" required maxlength="40" placeholder="Car payment" /></label>
+      <label>Monthly amount<div class="money-input"><span>$</span><input id="newExpenseAmount" type="number" inputmode="decimal" min="0" step="0.01" required /></div></label>
+      <label>Is it a bill or fun money?<select id="newExpenseType"><option value="need">Bill / basic need</option><option value="want">Fun money / optional</option></select></label>
+      <label>When does it start?<select id="newExpenseTiming"><option value="now">Now</option><option value="move">When I move out</option><option value="date">Custom date</option></select></label>
+      <label id="newExpenseDateWrap" class="hidden">Custom start date<input id="newExpenseDate" type="date" /></label>
+      <button id="addExpenseConfirm" class="btn dark" value="default">Add expense</button>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
